@@ -44,8 +44,8 @@ enum ZodiacSigns: Int {
     case Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces
 }
 
-/* method for calculating days since the J2000 epoch */
-func daysToJ200Epoch(date: NSDate) -> Int {
+/* method for calculating fractional days since the J2000 epoch */
+func daysToJ200Epoch(date: NSDate) -> Float {
     let components = NSDateComponents()
     components.day = 1
     components.month = 1
@@ -53,11 +53,19 @@ func daysToJ200Epoch(date: NSDate) -> Int {
     components.hour = 0
     components.minute = 0
     let J200Epoch = NSCalendar.currentCalendar().dateFromComponents(components)
-    return NSCalendar.currentCalendar().components(.Day, fromDate: J200Epoch!, toDate: date, options: []).day
+    let days = NSCalendar.currentCalendar().components(.Day, fromDate: J200Epoch!, toDate: date, options: []).day
+    let fractions = NSCalendar.currentCalendar().components([.Hour, .Minute], fromDate: date)
+    let hours = Float(fractions.hour)
+    let minutes = Float(fractions.minute)
+    return Float(days) + ((hours + minutes/60) / 24)
 }
 
-/* should be > 5998 */
+/* should be > 5998 & have a fractional component */
 let daysFromEpoch = daysToJ200Epoch(NSDate())
+
+let now = NSDate()
+let calendar = NSCalendar.currentCalendar()
+let comp = calendar.components([.Hour, .Minute], fromDate: now)
 
 /*
  Below are the calculations for planetary procession.
