@@ -1,15 +1,6 @@
 //: Playground - noun: a place where people can play
-import Darwin
-
-/* a person object within the Astrology app */
-class Person {
-    var sign: ZodiacSigns
-    
-    init(sign: ZodiacSigns) {
-        self.sign = sign
-    }
-    
-}
+//import Darwin
+import Foundation
 
 /* astronomic body and associated values
  
@@ -53,19 +44,24 @@ enum ZodiacSigns: Int {
     case Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces
 }
 
-// function to determin sign compatability
-func compatableSign(personA: Person, personB: Person) -> String {
-    if personA.sign == personB.sign {
-     return "Very Compatible"
-    } else {
-        return "Maybe?"
-    }
+/* method for calculating days since the J2000 epoch */
+func daysToJ200Epoch(date: NSDate) -> Int {
+    let components = NSDateComponents()
+    components.day = 1
+    components.month = 1
+    components.year = 2000
+    components.hour = 0
+    components.minute = 0
+    let J200Epoch = NSCalendar.currentCalendar().dateFromComponents(components)
+    return NSCalendar.currentCalendar().components(.Day, fromDate: J200Epoch!, toDate: date, options: []).day
 }
-ZodiacSigns.Aquarius
-let newPerson = Person(sign: ZodiacSigns.Aquarius)
-let newPerson2 = Person(sign: ZodiacSigns.Pisces)
-compatableSign(newPerson, personB: newPerson2)
 
+/* should be > 5998 */
+let daysFromEpoch = daysToJ200Epoch(NSDate())
+
+/*
+ Below are the calculations for planetary procession.
+ */
 
 func timeElapsed(date: Float) -> Float {
     return (date - 2451545.0)/36525
