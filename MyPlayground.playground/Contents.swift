@@ -67,10 +67,18 @@ let now = NSDate()
 let calendar = NSCalendar.currentCalendar()
 let comp = calendar.components([.Hour, .Minute], fromDate: now)
 
+/* Planetary position */
+
+/* 
+    Calculation for Eccentric Anomaly
+    E = M + e*(180/pi) * sin(M) * ( 1.0 + e * cos(M) ) 
+*/
+
+let PI: Float = 3.141
+
 /*
  Below are the calculations for planetary procession.
  */
-
 func timeElapsed(date: Float) -> Float {
     return (date - 2451545.0)/36525
 }
@@ -84,7 +92,7 @@ func meanAnomoly(meanLongitude: Float, longPerihelion: Float) -> Float {
     return absMeanAnomoly % 180
 }
 
-func eccentricAnomoly(meanAnomoly: Float, eccentricity: Float) -> Float {
+func eccentricAnomaly(meanAnomoly: Float, eccentricity: Float) -> Float {
     return meanAnomoly + eccentricity * (180/3.14) * sin(meanAnomoly) * (1 + eccentricity * cos(meanAnomoly))
 }
 
@@ -94,5 +102,34 @@ func coordinates(semiMajorAxis: Float, eccentricAnomoly: Float, eccentricity: Fl
     let zPrime: Float = 0.0
     return (xPrime, yPrime, zPrime)
 }
+
+func coordinatesFrom(meanAnomaly: Float, eccentricity: Float, argumentOfPerihelion: Float) -> (Float, Float) {
+    let xv = cos(meanAnomaly) * eccentricity
+    let yv = sqrt(1.0 - pow(eccentricity, 2) * sin(meanAnomaly))
+    
+    /* calculate distance and true anomaly */
+    let v = atan2(yv, xv)
+    /* sqrt( xv*xv + yv*yv ) */
+    let r = sqrt( pow(xv,2) + pow(yv,2))
+    
+    let lonSun = v + argumentOfPerihelion
+    
+    /*
+     xs = r * cos(lonsun)
+     ys = r * sin(lonsun)
+    */
+    
+    let xGeo = r * cos(lonSun)
+    let yGeo = r * sin(lonSun)
+    
+    return (v, r)
+}
+
+func
+
+
+/* testing grounds */
+
+eccentricAnomaly(356.0470, eccentricity: 0.016709)
 
 -73%180
