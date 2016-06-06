@@ -115,7 +115,28 @@ func distanceAndTrueAnomoly(meanAnomaly: Float, eccentricity: Float, argumentOfP
     return (v, r)
 }
 
-func
+/*
+    Helio-Centric coordinates
+ xh = r * ( cos(N) * cos(v+w) - sin(N) * sin(v+w) * cos(i) )
+ yh = r * ( sin(N) * cos(v+w) + cos(N) * sin(v+w) * cos(i) )
+ zh = r * ( sin(v+w) * sin(i) )
+ 
+*/
+func spacialCoordinates(distance: Float, longAscendingNode: Float, trueAnomaly: Float, argumentOfPerihelion: Float, inclinationOfEcliptic: Float) -> (Float, Float, Float) {
+
+    let cosPerihelionAnomaly = cos(trueAnomaly + argumentOfPerihelion)
+    let sinPerihelionAnomaly = sin(trueAnomaly + argumentOfPerihelion)
+    
+    let xh = distance * (cos(argumentOfPerihelion) * cosPerihelionAnomaly - sin(argumentOfPerihelion) * sinPerihelionAnomaly * cos(inclinationOfEcliptic))
+    
+    let yh = distance * (sin(argumentOfPerihelion) * cosPerihelionAnomaly + cos(argumentOfPerihelion) * sinPerihelionAnomaly * cos(inclinationOfEcliptic))
+
+    let zh = distance * (sinPerihelionAnomaly * sin(inclinationOfEcliptic))
+
+    return (xh, yh, zh)
+
+}
+
 
 
 /* testing grounds */
