@@ -103,7 +103,7 @@ func coordinates(semiMajorAxis: Float, eccentricAnomoly: Float, eccentricity: Fl
     return (xPrime, yPrime, zPrime)
 }
 
-func coordinatesFrom(meanAnomaly: Float, eccentricity: Float, argumentOfPerihelion: Float) -> (Float, Float) {
+func distanceAndTrueAnomoly(meanAnomaly: Float, eccentricity: Float, argumentOfPerihelion: Float) -> (Float, Float) {
     let xv = cos(meanAnomaly) * eccentricity
     let yv = sqrt(1.0 - pow(eccentricity, 2) * sin(meanAnomaly))
     
@@ -111,16 +111,6 @@ func coordinatesFrom(meanAnomaly: Float, eccentricity: Float, argumentOfPeriheli
     let v = atan2(yv, xv)
     /* sqrt( xv*xv + yv*yv ) */
     let r = sqrt( pow(xv,2) + pow(yv,2))
-    
-    let lonSun = v + argumentOfPerihelion
-    
-    /*
-     xs = r * cos(lonsun)
-     ys = r * sin(lonsun)
-    */
-    
-    let xGeo = r * cos(lonSun)
-    let yGeo = r * sin(lonSun)
     
     return (v, r)
 }
